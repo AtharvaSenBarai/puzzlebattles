@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const tournament = require("./tournament");
 var Filter = require('bad-words');
 filter = new Filter();
-mongoose.connect('',
+mongoose.connect('mongodb+srv://atharvaDB:atharva@cluster0.pxyli6m.mongodb.net/?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useFindAndModify: false,
@@ -154,23 +154,23 @@ socket.on('add player', async data => {
 
 	
 
-socket.on('remove player', async data => {
- var data=JSON.parse(data); 
- const tour=await getTour(data.tourid);	
- if(!tour.isStarted()){	
-  var data=JSON.parse(data); 
-  var tour= new tournament.Tournament({"id":data.tourid});
-  const player=await getUser({"username":data.username});
-  tour.remPlayer(player.toJson());
- 	socket.leave(tour.gameid);
-  io.to(tour.tourid).emit("player left",JSON.stringify(player.toJson())); 
-  tour=await getTour(data.tourid);
-  if(tour.isStarted())
-  tour.setsortBy("total");
-  io.to(tour.tourid).emit("update players",JSON.stringify(tour.toJson()));  
+ socket.on('remove player', async data => {
+    var data=JSON.parse(data); 
+    const tour=await getTour(data.tourid);	
+    if(!tour.isStarted()){	
+        var newTour= new tournament.Tournament({"id":data.tourid});
+        const player=await getUser({"username":data.username});
+        newTour.remPlayer(player.toJson());
+        socket.leave(newTour.gameid);
+        io.to(newTour.tourid).emit("player left",JSON.stringify(player.toJson())); 
+        tour=await getTour(data.tourid);
+        if(tour.isStarted())
+        tour.setsortBy("total");
+        io.to(tour.tourid).emit("update players",JSON.stringify(tour.toJson()));  
 	 
- }	 
+    }	 
 });
+
 
 socket.on('update player', async data => {
   var data=JSON.parse(data); 
