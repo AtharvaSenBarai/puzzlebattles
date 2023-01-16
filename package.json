@@ -10,8 +10,7 @@
     "mongoose": "^5.12.13",
     "node-cron": "^3.0.0",
     "node-schedule": "^2.0.0",
-    "rand-token": "^1.0.1",
-    "socket.io": "^3.0.3"
+    "rand-token": "^1.0.1"
   },
   "scripts": {
     "start": "node index.js"
